@@ -13,15 +13,15 @@
 // limitations under the License.
 
 /**
- * Adds a random greeting to the page.
+ * Retrieves list of hotspots from the NSW data website.
  */
-async function addRandomGreeting() {
+async function findHotspots() {
   var jsonURL = "";
+  var hotspots = {};
   await fetch('https://data.nsw.gov.au/data/dataset/nsw-covid-19-case-locations/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/view/c258e433-a795-47ea-9dfb-e129d03119e9')
     .then(async function (response) {
       if (response.status == 200){
         var parser = new DOMParser();
-        // Parse the text
         var doc = parser.parseFromString(await response.text(), "text/html");
         const scripts = doc.querySelectorAll("script");
         for(let i = 0; i < scripts.length; i++) {
@@ -37,10 +37,8 @@ async function addRandomGreeting() {
   await fetch("https://" + jsonURL.toString())
     .then(async function (response) {
       if (response.status == 200){
-        // Parse the text
         const data = await response.json();
-        const hotspots = data.data.monitor;
-        console.log(hotspots);
+        hotspots = data.data.monitor;
       }
   });
 }
