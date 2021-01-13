@@ -15,14 +15,35 @@
 /**
  * Adds a random greeting to the page.
  */
-function addRandomGreeting() {
-  const greetings =
-      ['Hello world!', '¡Hola Mundo!', '你好，世界！', 'Bonjour le monde!'];
+async function addRandomGreeting() {
+  //const response = await fetch('https://data.nsw.gov.au/data/dataset/nsw-covid-19-case-locations/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9');
 
-  // Pick a random greeting.
-  const greeting = greetings[Math.floor(Math.random() * greetings.length)];
-
-  // Add it to the page.
   const greetingContainer = document.getElementById('greeting-container');
-  greetingContainer.innerText = greeting;
+  //console.log(response.text());
+  var jsonURL = "";
+  await fetch('https://data.nsw.gov.au/data/dataset/nsw-covid-19-case-locations/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/view/c258e433-a795-47ea-9dfb-e129d03119e9')
+    .then(async function (response) {
+      if (response.status == 200){
+        var parser = new DOMParser();
+        // Parse the text
+        var doc = parser.parseFromString(await response.text(), "text/html");
+        //console.log(await response.text());
+        const scripts = doc.querySelectorAll("script");
+        for(let i = 0; i < scripts.length; i++) {
+            if (scripts[i].innerText.includes("data.nsw")) {
+                var findURL = /(data\.nsw\.gov\.au.*\.json)/;
+                var urls = findURL.exec(scripts[i].innerText);
+                jsonURL = urls[0];
+                break;
+            }
+        }
+      }
+  });
+  await fetch("https://" + jsonURL.toString())
+    .then(async function (response) {
+      if (response.status == 200){
+        // Parse the text
+        const data = response.json();
+      }
+  });
 }
