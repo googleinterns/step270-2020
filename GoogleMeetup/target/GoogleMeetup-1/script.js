@@ -16,6 +16,9 @@
  * Adds a random greeting to the page.
  */
 async function addRandomGreeting() {
+  //const response = await fetch('https://data.nsw.gov.au/data/dataset/nsw-covid-19-case-locations/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9');
+  const greetingContainer = document.getElementById('greeting-container');
+  //console.log(response.text());
   var jsonURL = "";
   await fetch('https://data.nsw.gov.au/data/dataset/nsw-covid-19-case-locations/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/view/c258e433-a795-47ea-9dfb-e129d03119e9')
     .then(async function (response) {
@@ -23,6 +26,7 @@ async function addRandomGreeting() {
         var parser = new DOMParser();
         // Parse the text
         var doc = parser.parseFromString(await response.text(), "text/html");
+        //console.log(await response.text());
         const scripts = doc.querySelectorAll("script");
         for(let i = 0; i < scripts.length; i++) {
             if (scripts[i].innerText.includes("data.nsw")) {
