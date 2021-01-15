@@ -1,4 +1,4 @@
-// Copyright 2019 Google LLC
+ // Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,4 +41,33 @@ async function findHotspots() {
         hotspots = data.data.monitor;
       }
   });
+<<<<<<< HEAD
+=======
+  createHeatmap(hotspots);
+}
+
+function createHeatmap(hotspots) {
+  var heatmapData = [];
+
+  const map = new google.maps.Map(document.getElementById('map'), {
+    center: new google.maps.LatLng(-33.8, 151.1),
+    zoom: 10,
+    mapId: '8623f34b0014ed47'
+  });
+
+  for (var i = 0; i < hotspots.length; i++) {
+    heatmapData.push(new google.maps.LatLng(hotspots[i].Lat, hotspots[i].Lon));
+    marker = new google.maps.Marker({
+      position: {lat: parseFloat(hotspots[i].Lat), lng: parseFloat(hotspots[i].Lon)},
+      map: map,
+      title: hotspots[i].Venue
+    });
+  }
+  
+  var heatmap = new google.maps.visualization.HeatmapLayer({
+    data: heatmapData//,
+    //dissipating: true
+  });
+  heatmap.setMap(map);
+>>>>>>> 739d469... Changed map colour scheme to greyscale
 }

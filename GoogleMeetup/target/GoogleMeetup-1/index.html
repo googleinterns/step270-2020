@@ -1,18 +1,14 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="UTF-8">
     <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <script defer
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDtA2GMuW863vB4nAngeE81Fe5jAX9aV3Y&map_ids=8623f34b0014ed47&libraries=visualization">
+    </script>
     <script src="script.js"></script>
+    <link rel="stylesheet" href="style.css">
   </head>
-  <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="findHotspots()">Hello</button>
-      <div id="greeting-container"></div>
-    </div>
+  <body onload="findHotspots();">
+    <div id="map"></div>
   </body>
 </html>
