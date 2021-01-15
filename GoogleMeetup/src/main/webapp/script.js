@@ -15,29 +15,13 @@
 /**
  * Adds a random greeting to the page.
  */
-async function addRandomGreeting() {
-  var jsonURL = "";
-  await fetch('https://data.nsw.gov.au/data/dataset/nsw-covid-19-case-locations/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/view/c258e433-a795-47ea-9dfb-e129d03119e9')
+async function findHotspots() {
+  var today = new Date();
+  var date = String(today.getFullYear()) + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
+  var today = new Date();
+  await fetch("https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/covid-case-locations-" + date + "a.json")
     .then(async function (response) {
       if (response.status == 200){
-        var parser = new DOMParser();
-        // Parse the text
-        var doc = parser.parseFromString(await response.text(), "text/html");
-        const scripts = doc.querySelectorAll("script");
-        for(let i = 0; i < scripts.length; i++) {
-            if (scripts[i].innerText.includes("data.nsw")) {
-                var findURL = /(data\.nsw\.gov\.au.*\.json)/;
-                var urls = findURL.exec(scripts[i].innerText);
-                jsonURL = urls[0];
-                break;
-            }
-        }
-      }
-  });
-  await fetch("https://" + jsonURL.toString())
-    .then(async function (response) {
-      if (response.status == 200){
-        // Parse the text
         const data = await response.json();
         const hotspots = data.data.monitor;
         console.log(hotspots);
