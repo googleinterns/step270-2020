@@ -1,18 +1,97 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>My Portfolio</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="script.js"></script>
-  </head>
-  <body>
-    <div id="content">
-      <h1>My Portfolio</h1>
-      <p>This is my portfolio.</p>
-      <p>Click here to get a random message:</p>
-      <button onclick="addRandomGreeting()">Hello</button>
-      <div id="greeting-container"></div>
-    </div>
-  </body>
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pathway+Gothic+One" />
+        <title>Google Meetup</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js"></script>
+    </head>
+    <body>
+        <div id="container">
+            <div id="logo">
+                <div class="g-line"></div>
+                <span class="red"></span>
+                <span class="yellow"></span>
+                <span class="green"></span>
+                <span class="blue"></span>
+            </div>
+            <p>oogle MeetUp</p>
+        </div>
+        <div id="navbar">
+            <ul>
+                <li class="full-width">
+                    <span>Add Person <i class="arrow"></i></span>
+                    <div class="dropdown">
+                        <form action="#">
+                            <label for="address">Input start address:</label>
+                            <input type="text" id="address" name="address" placeholder="Street, Suburb, Country"><br><br>
+                            <label for="cars">Choose a transport type:</label>
+                            <select name="transport" id="transport" form="transportform">
+                                <option value="public">Public</option>
+                                <option value="car">Car</option>
+                                <option value="walk">Walk</option>
+                                <option value="uber">Uber</option>
+                            </select><br><br>
+                            <input type="submit" value="Submit">
+                        </form>
+                    </div>
+                </li>
+
+                <li>
+                    <span>Options <i class="arrow"></i></span>
+                    <ul class="dropdown">
+                        <li>
+                            <span>Destination Type <i class="arrow"></i></span>
+                            <ul class="dropdown">
+                                <li><a href="#">Restaurant</a></li>
+                                <li><a href="#">Park</a></li>
+                                <li><a href="#">Shopping Centre</a></li>
+                                <li><a href="#">Bar</a></li>
+                                <li><a href="#">Arcade</a></li>
+                            </ul>
+                        </li>
+                        <li>
+                            <span>Max Travel Time <i class="arrow"></i></span>
+                            <ul class="dropdown">
+                                <li><a href="#">10min</a></li>
+                                <li><a href="#">30min</a></li>
+                                <li><a href="#">1h</a></li>
+                                <li><a href="#">2h</a></li>
+                                <li><a href="#">3h</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </li>
+
+                <!-- <li class="full-width">
+                    <span>Something <i class="arrow"></i></span>
+                    <div class="dropdown">
+                        <div class="clm">
+                            <h3>Integer</h3>
+                            <a href="#">Lacus iaculis</a>
+                            <a href="#">Eu tortor</a>
+                            <a href="#">Luctus varius</a>
+                        </div>
+                        <div class="clm">
+                            <h3>Efficitur Viverra</h3>
+                            <a href="#">Praesent</a>
+                            <h3>At Eros</h3>
+                            <a href="#">Pellentesque </a>
+                            <a href="#">Dignissim pulvinar</a>
+                        </div>
+                        <div class="clm">
+                            <a href="#"></a>
+                        </div>
+                    </div>
+                </li> -->
+
+                <li><a href="#">Find Meetup</a></li>
+            </ul>
+        </div>
+
+        <div id="map-container">
+            <img src="Images/Google-Maps-Data.jpg">
+        </div>
+    </body>
 </html>

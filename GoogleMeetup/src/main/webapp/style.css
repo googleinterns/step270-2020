@@ -1,9 +1,353 @@
-#content {
-  margin-left: auto;
-  margin-right: auto;
-  width: 650px;
+body {
+    margin: 0;
+    background: #FFFFFF;
 }
 
-#greeting-container {
-  margin-top: 20px;
+#navbar {
+    width: auto;
+    margin-top: 10px;
+    display: block;
+    text-align: center;
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
+    line-height: 1.2;
+}
+
+#navbar ul {
+    width: auto;
+    display: block;
+    font-size: 0;
+    text-align: center;
+    color: #000000;
+    background-color:  rgb(154, 221, 255);
+    border: transparent;
+    margin: 0; 
+    padding: 0;
+    list-style: none;
+    position: relative;
+    z-index: 999999990;
+    border-radius: 3px;
+} 
+
+#navbar li {
+    display: inline-block;
+    position: relative;    
+    font-size: 0; 
+    margin: 0;
+    padding: 0;
+}
+
+#navbar ul>li>span, #navbar >ul>li>a {   
+    font-size: 22px;
+    color: inherit;
+    text-decoration: none;
+    padding: 20px 20px; 
+    font-weight: 400;
+    letter-spacing: 2px;   
+    display: block;   
+    position: relative;
+    transition: all 0.3s;
+}
+
+#navbar li:hover>span, #navbar li:hover>a {  
+    color:#FFFFFF;
+    background-color:rgb(126, 166, 236);
+}
+
+#navbar .dropdown {
+    text-align: left;
+    left: 0;
+    font-family: inherit;
+    color:  #222222;
+    background-color: #FFFFFF;
+    border: none;
+    position: absolute;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    display: none;
+    opacity: 0;
+    cursor: default;
+}
+
+#navbar .dropdown li {
+    display: block;  
+}
+
+#navbar .dropdown li > span, #navbar .dropdown li > a, #navbar .clm a, #navbar .clm h3, form {
+    font-size: 16px;
+    font-weight: 400;
+    font-family: inherit;
+    margin: 0;
+    padding: 8px 20px; 
+    display: block;
+    color: inherit;
+    text-decoration: none;
+}
+
+#navbar .clm h3 {
+    font-size: 20px;
+    font-weight: 700;
+}
+
+#navbar .sub-item {
+    background-color: #FFFFFF;
+    position: relative;       
+    transition: all 0.3s;
+}
+
+#navbar .dropdown li:hover > span, #navbar .dropdown li:hover > a {
+    color: #000000;
+    background-color: #EEEEEE;
+}
+
+#navbar .clm a:hover {
+    color: #000000;
+    transition: color 0.2s;
+}
+
+#navbar .dropdown.right0 {
+    left: auto;
+    right: 0;
+} 
+
+#navbar .dropdown li > .dropdown.right0 {
+    left: auto;
+    right: 100%;
+} 
+       
+#navbar li.full-width {
+    position: static;
+}
+
+#navbar li.full-width .dropdown {
+    width: 100%;
+    left: 0;
+    box-sizing: border-box;
+}  
+
+#navbar li:hover > .dropdown {
+    display: block;
+    opacity: 1;
+    z-index: 1;
+}
+
+#navbar .dropdown li > .dropdown {
+    left: 100%; 
+    right: auto;
+    top: 0;
+}
+
+#navbar ul.dropdown {
+    min-width: 240px; 
+}
+
+#navbar div.dropdown  {
+    text-align: center;
+}
+
+/* each column */
+#navbar .clm {
+    text-align: left;
+    margin: 20px;
+    vertical-align: top; /* middle */
+    width: auto;
+    min-width: 240px;
+    display: inline-block;
+    *display: inline;
+    *zoom: 1;
+}
+
+#navbar .clm a:hover {
+    color: #000000;
+    text-decoration: underline;
+}
+
+/*-----------Arrows----------------*/
+#navbar .arrow {
+    color: inherit;
+    border-style: solid; 
+    border-width: 2px 2px 0 0; 
+    padding: 5px; 
+    transform: rotate(135deg);
+    margin-top: -10px;
+    margin-left: 5px;
+    position: relative;
+    display: inline-block;
+    width: 0;
+    height: 0;
+    vertical-align: middle;
+    overflow: hidden;
+}
+        
+#navbar .dropdown .arrow {
+    transform: rotate(45deg);
+    top: 50%;
+    margin-top: -7px;
+    position: absolute;
+    left: auto;
+    right: 20px;
+} 
+
+
+
+@keyframes topItemAnimation{
+    from {opacity: 0;  transform:translate3d(-16%, 0, 0);}
+    to {opacity: 1; transform:translate3d(0, 0, 0);}
+}
+#navbar li a {animation:none;}
+#navbar.active li a { animation: topItemAnimation 0.5s ease 0.5s backwards;}
+#navbar.active li:nth-of-type(1) a { animation: topItemAnimation 0.5s ease 0.08333333333333333s backwards;}
+#navbar.active li:nth-of-type(2) a { animation: topItemAnimation 0.5s ease 0.16666666666666666s backwards;}
+#navbar.active li:nth-of-type(3) a { animation: topItemAnimation 0.5s ease 0.25s backwards;}
+#navbar.active li:nth-of-type(4) a { animation: topItemAnimation 0.5s ease 0.3333333333333333s backwards;}
+#navbar.active li:nth-of-type(5) a { animation: topItemAnimation 0.5s ease 0.4166666666666667s backwards;}@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { #navbar.active li a{animation:none!important;}}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+@import url("https://fonts.googleapis.com/css?family=Roboto");
+
+#container {
+    font-family: "Roboto", sans-serif;
+    position: relative;
+    margin-left: 25px;
+    width: 275px;
+    height: 90px;
+}
+
+#container p {
+    position: absolute;
+    margin: 0;
+    bottom: 0px;
+    right: 1px;
+    font-size: 30px;
+    color: #444;
+}
+
+#logo {
+    position: relative;
+    width: 75px;
+    height: 75px;
+    border-radius: 50%;
+    margin-top: 10px;
+    overflow: hidden;
+    border: 7px solid #f1f1f1;
+    box-shadow: 0 0px 2px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+#logo::after {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 60%;
+    height: 60%;
+    border-radius: 50%;
+    background: #f1f1f1;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 4;
+}
+
+#logo::before {
+    position: absolute;
+    content: "";
+    display: block;
+    width: 35%;
+    height: 32%;
+    background: #f1f1f1;
+    right: 0;
+    z-index: 10;
+    bottom: 50%;
+    transform: rotateZ(45deg);
+    -webkit-transform: rotateZ(45deg);
+}
+
+#logo .g-line {
+    width: 50%;
+    height: 20%;
+    background: #0091ea;
+    position: absolute;
+    right: 0;
+    margin: auto;
+    border-bottom-right-radius: 4px 20px;
+    top: 0;
+    bottom: 0;
+    z-index: 15;
+}
+
+#logo .yellow {
+    width: 40%;
+    height: 40%;
+    position: absolute;
+    left: -15%;
+    bottom: 32%;
+    margin: auto;
+    background: #ffc107;
+    transform: rotateZ(-48deg);
+    -webkit-transform: rotateZ(-48deg);
+    z-index: 3;
+}
+
+#logo .green {
+    position: absolute;
+    width: 100%;
+    height: 50%;
+    bottom: 0;
+    border-radius: 0 0 100% 100%;
+    background: #4caf50;
+    z-index: 2;
+}
+
+#logo .blue {
+    position: absolute;
+    width: 0px;
+    height: 0px;
+    right: 0;
+    z-index: 30;
+    top: 50%;
+    z-index: 2;
+    width: 35%;
+    height: 32%;
+    background: #0091ea;
+    right: 0;
+    z-index: 2;
+    transform: rotateZ(45deg);
+    -webkit-transform: rotateZ(45deg);
+}
+
+#logo .red {
+    width: 81%;
+    height: 50%;
+    position: absolute;
+    top: 0px;
+    background: #f44336;
+}
+
+
+
+
+#map-container {
+    width: 100%;
+    text-align: center;
+    display: block;
+    background-color: rgb(255, 177, 75);
+}
+
+#map-container > img {
+    width: 95%;
+    padding: 3%;
 }
