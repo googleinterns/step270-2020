@@ -12,24 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-/**
- * Adds a random greeting to the page.
- */
-async function findHotspots() {
-  var today = new Date();
-  var date = String(today.getFullYear()) + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
-  var hotspots = {};
-  await fetch("https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/covid-case-locations-" + date + "a.json")
-    .then(async function (response) {
-      if (response.status == 200){
-        const data = await response.json();
-        hotspots = data.data.monitor;
-      }
-  });
-  createHeatmap(hotspots);
-}
-
-function createHeatmap(hotspots) {
+async function createHeatmap() {
+  var response = await fetch('/data');
+  const data = await response.json();
+  const hotspots = data.data.monitor;
   var heatmapData = [];
 
   const map = new google.maps.Map(document.getElementById('map'), {

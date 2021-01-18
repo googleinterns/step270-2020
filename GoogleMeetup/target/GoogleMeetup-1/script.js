@@ -15,7 +15,7 @@
 /**
  * Adds a random greeting to the page.
  */
-async function findHotspots() {
+/*async function findHotspots() {
   var today = new Date();
   var date = String(today.getFullYear()) + String(today.getMonth() + 1).padStart(2, '0') + String(today.getDate()).padStart(2, '0');
   var hotspots = {};
@@ -26,10 +26,14 @@ async function findHotspots() {
         hotspots = data.data.monitor;
       }
   });
-  createHeatmap(hotspots);
-}
+  
+}*/
 
-function createHeatmap(hotspots) {
+
+async function createHeatmap() {
+  var response = await fetch('/data');
+  const data = await response.json();
+  const hotspots = data.data.monitor;
   var heatmapData = [];
 
   const map = new google.maps.Map(document.getElementById('map'), {
