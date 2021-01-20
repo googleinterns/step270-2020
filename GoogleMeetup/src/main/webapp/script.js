@@ -13,9 +13,11 @@
 // limitations under the License.
 
 async function createHeatmap() {
+  document.querySelectorAll("script")[2].src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY + "&map_ids=8623f34b0014ed47&libraries=visualization";
   var response = await fetch('/data');
   const data = await response.json();
   const hotspots = data.data.monitor;
+
   var heatmapData = [];
 
   const map = new google.maps.Map(document.getElementById('map'), {

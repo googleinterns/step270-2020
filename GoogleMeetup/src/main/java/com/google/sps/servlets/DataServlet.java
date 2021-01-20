@@ -38,11 +38,11 @@ public class DataServlet extends HttpServlet {
     Scanner sc = new Scanner(url.openStream());
 
     StringBuffer sb = new StringBuffer();
+    String result = new String();
     while(sc.hasNext()) {
-        sb.append(sc.next());
+        result = result + sc.next();
     }
 
-    String result = sb.toString();
     response.getWriter().println(result);
   }
 }
