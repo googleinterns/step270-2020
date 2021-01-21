@@ -1,4 +1,4 @@
- // Copyright 2019 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,37 +13,216 @@
 // limitations under the License.
 
 async function createHeatmap() {
-  // Create the script tag, set the appropriate attributes
-  var script = document.createElement('script');
-  script.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY + "&map_ids=8623f34b0014ed47&libraries=visualization";
-  script.defer = true;
-  document.head.appendChild(script);
+    // Create the script tag, set the appropriate attributes
+    var script = document.createElement('script');
+    script.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY + "&map_ids=8623f34b0014ed47&libraries=visualization";
+    script.defer = true;
+    document.head.appendChild(script);
 
-  var response = await fetch('/data');
-  const data = await response.json();
-  const hotspots = data.data.monitor;
+    var response = await fetch('/data');
+    const data = await response.json();
+    const hotspots = data.data.monitor;
 
-  var heatmapData = [];
+    var heatmapData = [];
 
-  const map = new google.maps.Map(document.getElementById('map'), {
-    center: new google.maps.LatLng(-33.8, 151.1),
-    zoom: 10,
-    mapId: '8623f34b0014ed47'
-  });
+    const map = new google.maps.Map(document.getElementById('map'), {
+        center: new google.maps.LatLng(-33.8, 151.1),
+        zoom: 10,
 
-  for (var i = 0; i < hotspots.length; i++) {
-    heatmapData.push(new google.maps.LatLng(hotspots[i].Lat, hotspots[i].Lon));
-    marker = new google.maps.Marker({
-      position: {lat: parseFloat(hotspots[i].Lat), lng: parseFloat(hotspots[i].Lon)},
-      map: map,
-      title: hotspots[i].Venue
+        styles: [
+            {
+                "elementType": "geometry",
+                "stylers": [
+                {
+                    "color": "#212121"
+                }
+                ]
+            },
+            {
+                "elementType": "labels.icon",
+                "stylers": [
+                {
+                    "visibility": "off"
+                }
+                ]
+            },
+            {
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#757575"
+                }
+                ]
+            },
+            {
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                {
+                    "color": "#212121"
+                }
+                ]
+            },
+            {
+                "featureType": "administrative",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                    "color": "#757575"
+                }
+                ]
+            },
+            {
+                "featureType": "administrative.country",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#9e9e9e"
+                }
+                ]
+            },
+            {
+                "featureType": "administrative.locality",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#bdbdbd"
+                }
+                ]
+            },
+            {
+                "featureType": "poi",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#757575"
+                }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                    "color": "#181818"
+                }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#616161"
+                }
+                ]
+            },
+            {
+                "featureType": "poi.park",
+                "elementType": "labels.text.stroke",
+                "stylers": [
+                {
+                    "color": "#1b1b1b"
+                }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "geometry.fill",
+                "stylers": [
+                {
+                    "color": "#2c2c2c"
+                }
+                ]
+            },
+            {
+                "featureType": "road",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#8a8a8a"
+                }
+                ]
+            },
+            {
+                "featureType": "road.arterial",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                    "color": "#373737"
+                }
+                ]
+            },
+            {
+                "featureType": "road.highway",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                    "color": "#3c3c3c"
+                }
+                ]
+            },
+            {
+                "featureType": "road.highway.controlled_access",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                    "color": "#4e4e4e"
+                }
+                ]
+            },
+            {
+                "featureType": "road.local",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#616161"
+                }
+                ]
+            },
+            {
+                "featureType": "transit",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#757575"
+                }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "geometry",
+                "stylers": [
+                {
+                    "color": "#000000"
+                }
+                ]
+            },
+            {
+                "featureType": "water",
+                "elementType": "labels.text.fill",
+                "stylers": [
+                {
+                    "color": "#3d3d3d"
+                }
+                ]
+            }
+        ]
     });
-  }
-  
-  var heatmap = new google.maps.visualization.HeatmapLayer({
-    data: heatmapData
-  });
-  heatmap.setMap(map);
+
+    for (var i = 0; i < hotspots.length; i++) {
+        heatmapData.push(new google.maps.LatLng(hotspots[i].Lat, hotspots[i].Lon));
+        marker = new google.maps.Marker({
+            position: {lat: parseFloat(hotspots[i].Lat), lng: parseFloat(hotspots[i].Lon)},
+            map: map,
+            title: hotspots[i].Venue
+        });
+    }
+
+    var heatmap = new google.maps.visualization.HeatmapLayer({
+        data: heatmapData
+    });
+    heatmap.setMap(map);
+}
 
 var slider = document.getElementById("timeRange");
 var output = document.getElementById("value");
