@@ -14,19 +14,36 @@
 
 package com.google.sps.servlets;
 
+import com.google.gson.Gson;
 import java.io.IOException;
+import java.net.URL;
+import java.util.Date;
+import java.util.Scanner;
+import java.lang.String;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-/** Servlet that returns some example content. TODO: modify this file to handle comments data */
 @WebServlet("/data")
 public class DataServlet extends HttpServlet {
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    response.setContentType("text/html;");
-    response.getWriter().println("<h1>Hello world!</h1>");
+    response.setContentType("application/json");
+    LocalDate today = LocalDate.now();
+    String date = today.format(DateTimeFormatter.BASIC_ISO_DATE);
+    URL url = new URL("https://data.nsw.gov.au/data/dataset/0a52e6c1-bc0b-48af-8b45-d791a6d8e289/resource/f3a28eed-8c2a-437b-8ac1-2dab3cf760f9/download/covid-case-locations-20" + date + "a.json");
+
+    Scanner sc = new Scanner(url.openStream());
+
+    StringBuilder sb = new StringBuilder();
+    String result = new String();
+    while(sc.hasNext()) {
+        result = result + sc.next();
+    }
+
+    response.getWriter().println(result);
   }
 }

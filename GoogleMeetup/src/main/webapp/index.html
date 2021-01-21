@@ -4,9 +4,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Google Meetup</title>
         <link rel="stylesheet" href="style.css">
-        <link rel="stylesheet" href="logo.css">
     </head>
-    <body>
+    <body onload="createHeatmap();">
         <div id="navbar">
             <ul>
                 <li class="full-width">
@@ -60,7 +59,10 @@
         <div id="map-container">
             <img src="Images/Google-Maps-Data.jpg">
         </div>
+      
+        <div id="map"></div>
 
+        <script type="text/javascript" src="meetup.js"></script>
         <script src="script.js"></script>
     </body>
 </html>

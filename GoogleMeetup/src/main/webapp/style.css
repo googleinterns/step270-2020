@@ -232,7 +232,6 @@ body {
 }
 
 /* Map */
-
 #map-container {
     width: 100%;
     text-align: center;
@@ -243,4 +242,10 @@ body {
 #map-container > img {
     width: 95%;
     padding: 3%;
+}
+
+#map {
+  height: 100% !important;
+  width: 100% !important;
+  position: static !important;
 }
