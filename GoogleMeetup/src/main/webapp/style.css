@@ -1,16 +1,24 @@
-body {
-    margin: 0;
-    background: #FFFFFF;
+html, body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+}
+
+#outer {
+  display: flex;
+  flex-flow: column;
+  height: 100%;
 }
 
 #navbar {
-    width: auto;
+    height: 66px;
+    background-color: rgb(154, 221, 255);
     display: block;
     text-align: center;
     font-family: "Roboto", Helvetica, Arial, sans-serif;
     line-height: 1.2;
 }
-
+ 
 #navbar ul {
     width: auto;
     display: block;
@@ -186,7 +194,6 @@ body {
 } 
 
 /* Animation */
-
 @keyframes topItemAnimation{
     from {opacity: 0;  transform:translate3d(-16%, 0, 0);}
     to {opacity: 1; transform:translate3d(0, 0, 0);}
@@ -200,7 +207,6 @@ body {
 #navbar.active li:nth-of-type(5) a { animation: topItemAnimation 0.5s ease 0.4166666666666667s backwards;}@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) { #navbar.active li a{animation:none!important;}}
 
 /* Slider */
-
 .slider {
   -webkit-appearance: none;
   width: 100%;
@@ -229,23 +235,20 @@ body {
   border-radius: 50%;
   background: rgb(253, 187, 101);
   cursor: pointer;
-}
+} 
 
 /* Map */
 #map-container {
-    width: 100%;
-    text-align: center;
-    display: block;
-    background-color: rgb(255, 177, 75);
-}
+    flex-grow: 1;
+    background-color: rgb(238, 250, 255);
 
-#map-container > img {
-    width: 95%;
-    padding: 3%;
-}
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} 
 
 #map {
-  height: 100% !important;
-  width: 100% !important;
-  position: static !important;
+    border: thin solid black;
+    width: 90%;
+    height: 85%;
 }
