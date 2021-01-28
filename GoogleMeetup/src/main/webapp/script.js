@@ -234,11 +234,6 @@ async function createHeatmap() {
             title: hotspots[i].Venue
         });
         markers.push(marker);
-        marker.setVisible(false);
-        const infowindow = new google.maps.InfoWindow({
-            content: hotspots[i].HealthAdviceHTML,
-            maxWidth: 200
-        });
         marker.addListener("click", () => {
             infowindow.open(map, marker);
         });
