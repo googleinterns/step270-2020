@@ -24,11 +24,11 @@ async function createHeatmap() {
     const hotspots = data.data.monitor;
 
     var heatmapData = [];
+    var markers = [];
 
     const map = new google.maps.Map(document.getElementById('map'), {
         center: new google.maps.LatLng(-33.8, 151.1),
         zoom: 10,
-
         styles: [
             {
                 "elementType": "geometry",
@@ -209,6 +209,18 @@ async function createHeatmap() {
         ]
     });
 
+    map.addListener("zoom_changed", () => {
+        if(map.zoom >= 15) {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setVisible(true);
+            }
+        } else {
+            for (var i = 0; i < markers.length; i++) {
+                markers[i].setVisible(false);
+            }
+        }
+    });
+
     for (var i = 0; i < hotspots.length; i++) {
         heatmapData.push(new google.maps.LatLng(hotspots[i].Lat, hotspots[i].Lon));
         const infowindow = new google.maps.InfoWindow({
@@ -223,8 +235,12 @@ async function createHeatmap() {
         });
         markers.push(marker);
         marker.setVisible(false);
-        markers[i].addListener("click", () => {
-            infowindow.open(map, markers[i]);
+        const infowindow = new google.maps.InfoWindow({
+            content: hotspots[i].HealthAdviceHTML,
+            maxWidth: 200
+        });
+        marker.addListener("click", () => {
+            infowindow.open(map, marker);
         });
     }
 
