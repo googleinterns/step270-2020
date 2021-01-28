@@ -234,6 +234,7 @@ async function createHeatmap() {
             title: hotspots[i].Venue
         });
         markers.push(marker);
+        marker.setVisible(false);
         marker.addListener("click", () => {
             infowindow.open(map, marker);
         });
