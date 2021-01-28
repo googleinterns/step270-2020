@@ -31,7 +31,7 @@ html, body {
     padding: 0;
     list-style: none;
     position: relative;
-    z-index: 999999990;
+    z-index: 10;
     border-radius: 3px;
 } 
 
@@ -78,7 +78,7 @@ html, body {
     display: block;  
 }
 
-#navbar .dropdown li > span, #navbar .dropdown li > a, #navbar .clm a, #navbar .clm h3, form {
+#navbar .dropdown li > span, #navbar .dropdown li > a, form {
     font-size: 16px;
     font-weight: 400;
     font-family: inherit;
@@ -87,11 +87,6 @@ html, body {
     display: block;
     color: inherit;
     text-decoration: none;
-}
-
-#navbar .clm h3 {
-    font-size: 20px;
-    font-weight: 700;
 }
 
 #navbar .sub-item {
@@ -103,11 +98,7 @@ html, body {
 #navbar .dropdown li:hover > span, #navbar .dropdown li:hover > a {
     color: #000000;
     background-color: #EEEEEE;
-}
-
-#navbar .clm a:hover {
-    color: #000000;
-    transition: color 0.2s;
+    cursor: pointer;
 }
 
 #navbar .dropdown.right0 {
@@ -148,23 +139,6 @@ html, body {
 
 #navbar div.dropdown  {
     text-align: center;
-}
-
-/* each column */
-#navbar .clm {
-    text-align: left;
-    margin: 20px;
-    vertical-align: top; /* middle */
-    width: auto;
-    min-width: 240px;
-    display: inline-block;
-    *display: inline;
-    *zoom: 1;
-}
-
-#navbar .clm a:hover {
-    color: #000000;
-    text-decoration: underline;
 }
 
 /*-----------Arrows----------------*/
@@ -225,7 +199,7 @@ html, body {
   width: 25px;
   height: 25px;
   border-radius: 50%; 
-  background: rgb(253, 187, 101);
+  background: rgb(255, 189, 136);
   cursor: pointer;
 }
 
@@ -233,7 +207,7 @@ html, body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgb(253, 187, 101);
+  background: rgb(255, 189, 136);
   cursor: pointer;
 } 
 
@@ -251,4 +225,22 @@ html, body {
     border: thin solid black;
     width: 90%;
     height: 85%;
+}
+
+.selected-destination {
+    background-color: rgb(255, 189, 136);
+}
+
+.selected-destination:hover {
+    background-color: rgb(255, 189, 136) !important;
+}
+
+form > #address {
+    width: 300px;
+}
+
+.pac-container {
+	position: absolute;
+    z-index: 100;
+    top: 30px !important;
 }

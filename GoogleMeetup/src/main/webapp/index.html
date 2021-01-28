@@ -6,19 +6,20 @@
         <link rel="stylesheet" href="style.css">
         <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
     </head>
-    <body onload="createHeatmap();">
+    <body onload="main();">
         <div id="outer">
             <div id="navbar">
                 <ul>
                     <li class="full-width">
                         <span>Add Person <i class="arrow"></i></span>
-                        <div class="dropdown">
-                            <form action="#">
+                        <div class="dropdown" id="addPerson">
+                            <form name="newAttendee" action="#" method="post">
                                 <label for="address">Input start address:</label>
-                                <input type="text" id="address" name="address" placeholder="Street, Suburb, Country"><br><br>
+                                <input type="text" id="address" name="address" placeholder="14 Example St, Kensington, NSW, Australia" required><br><br>
                                 <label for="cars">Choose a transport type:</label>
-                                <select name="transport" id="transport" form="transportform">
+                                <select name="transport" id="transport" form="transportform" required>
                                     <option value="public">Public</option>
+                                    <option value="bike">Bike</option>
                                     <option value="car">Car</option>
                                     <option value="walk">Walk</option>
                                     <option value="uber">Uber</option>
@@ -34,11 +35,11 @@
                             <li>
                                 <span>Destination Type <i class="arrow"></i></span>
                                 <ul class="dropdown">
-                                    <li><a href="#">Restaurant</a></li>
-                                    <li><a href="#">Park</a></li>
-                                    <li><a href="#">Shopping Centre</a></li>
-                                    <li><a href="#">Bar</a></li>
-                                    <li><a href="#">Arcade</a></li>
+                                    <li><a onclick="selectDestination()" id="restaurant">Restaurant</a></li>
+                                    <li><a onclick="selectDestination()" id="park">Park</a></li>
+                                    <li><a onclick="selectDestination()" id="shopping-centre">Shopping Centre</a></li>
+                                    <li><a onclick="selectDestination()" id="bar">Bar</a></li>
+                                    <li><a onclick="selectDestination()" id="arcade">Arcade</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -63,7 +64,7 @@
             </div>
         </div>
     
-        <script type="text/javascript" src="meetup.js"></script>
+        <script type="text/javascript" src="meetup.js"></script>\=
         <script src="script.js"></script>
     </body>
 </html>
