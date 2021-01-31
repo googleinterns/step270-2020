@@ -209,35 +209,30 @@ async function createHeatmap() {
         ]
     });
 
-    map.addListener("zoom_changed", () => {
-        if(map.zoom >= 15) {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setVisible(true);
-            }
-        } else {
-            for (var i = 0; i < markers.length; i++) {
-                markers[i].setVisible(false);
-            }
-        }
-    });
-
     for (var i = 0; i < hotspots.length; i++) {
         heatmapData.push(new google.maps.LatLng(hotspots[i].Lat, hotspots[i].Lon));
+        const infowindow = new google.maps.InfoWindow({
+            content: "<h3>" + hotspots[i].Venue + "</h3>" + hotspots[i].Date + ", " + hotspots[i].Time + "<br/>" + hotspots[i].HealthAdviceHTML,
+            maxWidth: 300,
+            position: new google.maps.LatLng(hotspots[i].Lat, hotspots[i].Lon)
+        });
         marker = new google.maps.Marker({
             position: {lat: parseFloat(hotspots[i].Lat), lng: parseFloat(hotspots[i].Lon)},
-            map: map,
+            map,
             title: hotspots[i].Venue
         });
         markers.push(marker);
         marker.setVisible(false);
-        const infowindow = new google.maps.InfoWindow({
-            content: hotspots[i].HealthAdviceHTML,
-            maxWidth: 200
-        });
-        marker.addListener("click", () => {
-            infowindow.open(map, marker);
+        markers[i].addListener("click", () => {
+            infowindow.open(map, markers[i]);
         });
     }
+
+    map.addListener("zoom_changed", () => {
+        for (var i = 0; i < markers.length; i++) {
+            markers[i].setVisible(map.zoom >= 15);
+        }
+    });
 
     var heatmap = new google.maps.visualization.HeatmapLayer({
         data: heatmapData
