@@ -14,10 +14,8 @@
 
 package com.google.sps.servlets;
 
-import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Date;
 import java.util.Scanner;
 import java.lang.String;
 import java.time.LocalDate;

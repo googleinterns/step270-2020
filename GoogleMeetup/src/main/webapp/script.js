@@ -249,6 +249,34 @@ async function createHeatmap() {
         data: heatmapData
     });
     heatmap.setMap(map);
+
+    var originArray = ['Bankstown, NSW', 'Cronulla, NSW', 'Avalon Beach, NSW'];
+    var midpoint = 'Strathfield, NSW';
+
+    processRequests(map, originArray, midpoint);
+}
+
+function processRequests(map, originArray, midpoint){
+    var directionsService = new google.maps.DirectionsService();
+
+    for (var i = 0; i < originArray.length; i++) {
+        var request = {
+            origin: originArray[i],
+            destination: midpoint,
+            travelMode: 'DRIVING'
+        };
+
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+        
+        directionsService.route(request, function(response, status) {
+            if (status === 'OK') {
+                directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map);
+                directionsRenderer.setDirections(response);
+            }
+        });
+    }
 }
 
 
