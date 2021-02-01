@@ -16,13 +16,12 @@
                             <form id="addPerson">
                                 <label for="address">Input start address:</label>
                                 <input type="text" id="address" name="address" placeholder="14 Example St, Kensington, NSW, Australia" required><br><br>
-                                <label for="cars">Choose a transport type:</label>
+                                <label for="transport">Choose a transport type:</label>
                                 <select name="transport" id="transport" form="transportform" required>
                                     <option value="public">Public</option>
-                                    <option value="bike">Bike</option>
                                     <option value="car">Car</option>
+                                    <option value="bike">Bike</option>
                                     <option value="walk">Walk</option>
-                                    <option value="uber">Uber</option>
                                 </select><br><br>
                                 <input type="button" value="Submit" onclick="addPerson()">
                             </form>

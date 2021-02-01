@@ -264,34 +264,6 @@ async function createHeatmap() {
         data: heatmapData
     });
     heatmap.setMap(map);
-
-    var originArray = ['Bankstown, NSW', 'Cronulla, NSW', 'Avalon Beach, NSW'];
-    var midpoint = 'Strathfield, NSW';
-
-    processRequests(map, originArray, midpoint);
-}
-
-function processRequests(map, originArray, midpoint){
-    var directionsService = new google.maps.DirectionsService();
-
-    for (var i = 0; i < originArray.length; i++) {
-        var request = {
-            origin: originArray[i],
-            destination: midpoint,
-            travelMode: 'DRIVING'
-        };
-
-        var directionsRenderer = new google.maps.DirectionsRenderer();
-        directionsRenderer.setMap(map);
-        
-        directionsService.route(request, function(response, status) {
-            if (status === 'OK') {
-                directionsRenderer = new google.maps.DirectionsRenderer();
-                directionsRenderer.setMap(map);
-                directionsRenderer.setDirections(response);
-            }
-        });
-    }
 }
 
 
@@ -363,8 +335,11 @@ function findMeetup() {
 
     maxTravelTime = document.getElementsByClassName('slider')[0].value;
 
+    drawPaths();
+
     alert("Not Finished Yet!");
 }
+
 
 function validateInput() {
     if (attendees.length == 0) {
@@ -376,6 +351,45 @@ function validateInput() {
     }
     
     return true;
+}
+
+
+function drawPaths(){
+    var directionsService = new google.maps.DirectionsService();
+
+    for (var i = 0; i < attendees.length; i++) {
+        var request = {
+            origin: attendees[i].address,
+            destination: mapCenter,
+            travelMode: getTransitMode(attendees[i].transport)
+        };
+
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+        
+        directionsService.route(request, function(response, status) {
+            if (status === 'OK') {
+                // This is for later when rendering route duration in infowindows
+                // console.log(response.routes[0].legs[0].duration);
+
+                directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map);
+                directionsRenderer.setDirections(response);
+            }
+        });
+    }
+}
+
+function getTransitMode(transport) {
+    if (transport == "car") {
+        return "DRIVING";
+    } else if (transport == "public") {
+        return "TRANSIT";
+    } else if (transport == "bike") {
+        return "BICYCLING";
+    } else if (transport == "walk") {
+        return "WALKING";
+    }
 }
 
 
