@@ -244,3 +244,7 @@ form > #address {
     z-index: 100;
     top: 30px !important;
 }
+
+#findMeetupButton {
+    cursor: pointer;
+}

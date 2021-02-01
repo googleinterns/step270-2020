@@ -12,6 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// The relevant meetup information
+var attendees = [];
+var destinationType = null;
+var maxTravelTime = 60;
+
+// Initialise map variables
+var geocoder;
+var map;
+var mapCenter;
+
+
 function main() {
     initialiseMapsAPI();
     createHeatmap();
@@ -37,8 +48,12 @@ async function createHeatmap() {
     var heatmapData = [];
     var markers = [];
 
-    const map = new google.maps.Map(document.getElementById('map'), {
-        center: new google.maps.LatLng(-33.8, 151.1),
+    geocoder = new google.maps.Geocoder();
+
+    mapCenter = new google.maps.LatLng(-33.8, 151.1);
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: mapCenter,
         zoom: 10,
         styles: [
             {
@@ -291,7 +306,6 @@ slider.oninput = function() {
 
 // Destinations
 var destinations = ["restaurant", "park", "shopping-centre", "bar", "arcade"];
-var currentDestination = null;
 function selectDestination() {
     for (i = 0; i < destinations.length; i++) {
         if (document.getElementById(destinations[i]).classList.contains("selected-destination")) {
@@ -299,7 +313,7 @@ function selectDestination() {
         }
     }
     document.getElementById(event.srcElement.id).classList.add("selected-destination");
-    currentDestination = event.srcElement.id;
+    destinationType = event.srcElement.id;
 }
 
 
@@ -315,6 +329,126 @@ function initAutocomplete() {
 
     // Add the autocomplete container to dropdown div so menu doesn't disappear
     setTimeout(function() {
-        document.getElementById("addPerson").prepend(document.getElementsByClassName("pac-container")[0]);
+        document.getElementById("addPersonContainer").prepend(document.getElementsByClassName("pac-container")[0]);
     }, 300);
+}
+
+
+// Adding a new meetup attendee 
+function addPerson() {
+    // Create new attendee dict
+    var address = document.getElementById("address").value;
+    var transport = document.getElementById("transport").value;
+    var newAttendee = {
+        "address": address,
+        "transport": transport
+    };
+
+    // Add to attendees list 
+    attendees.push(newAttendee);
+
+    // Add marker to the map and recenter
+    getLatLng(newAttendee);
+
+    // Reset the form inputs
+    document.querySelector('#addPerson').reset();
+}
+
+
+// Finding the meetup 
+function findMeetup() {
+    if (!validateInput()) {
+        return;
+    }
+
+    maxTravelTime = document.getElementsByClassName('slider')[0].value;
+
+    alert("Not Finished Yet!");
+}
+
+function validateInput() {
+    if (attendees.length == 0) {
+        alert("You must add at least one person");
+        return false;
+    } if (destinationType == null) {
+        alert("You must select a destination type");
+        return false;
+    }
+    
+    return true;
+}
+
+
+var latLngs = [];
+function getLatLng(attendee) {
+    var address = attendee['address'];
+    geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == 'OK') {
+            var latLng = results[0].geometry.location;
+            latLngs[latLngs.length] = latLng;
+
+            addAttendeeMarker();
+            centerMap();
+        } else { // For debugging
+            console.log('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
+
+
+function centerMap() {
+    if (latLngs.length == 1) {
+        map.setCenter(latLngs[0]);
+        mapCenter = latLngs[0];
+    } else {
+        var midpoint = {
+            "lat":latLngs[0].lat(), 
+            "lng": latLngs[0].lng()
+        };
+
+        for (var i = 1; i < latLngs.length; i++) {
+            midpoint = calculateMidpoint(midpoint.lat, midpoint.lng, latLngs[i].lat(), latLngs[i].lng());
+        }
+
+        map.setCenter(midpoint);
+        mapCenter = midpoint;
+    }
+}
+
+
+function addAttendeeMarker() {
+    var latLng = latLngs[latLngs.length - 1];
+    var marker = new google.maps.Marker({
+        map: map,
+        position: latLng
+    });
+}
+
+
+// Algorithm for geographical midpoint on spherical surface
+function calculateMidpoint (lat1, lng1, lat2, lng2) {
+    lat1 = lat1 * 0.017453292519943295;
+    lng1 = lng1 * 0.017453292519943295;
+    lat2 = lat2 * 0.017453292519943295;
+    lng2 = lng2 * 0.017453292519943295;
+
+    dlng = lng2 - lng1;
+    Bx = Math.cos(lat2) * Math.cos(dlng);
+    By = Math.cos(lat2) * Math.sin(dlng);
+    lat3 = Math.atan2(
+        Math.sin(lat1) + Math.sin(lat2), 
+        Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By)
+    );
+    lng3 = lng1 + Math.atan2(
+        By, 
+        (Math.cos(lat1) + Bx)
+    );
+    pi = 3.141592653589793;
+    lat = (lat3 * 180) / pi;
+    lng = (lng3 * 180) / pi;
+
+    return {
+        "lat": lat, 
+        "lng": lng
+    };
 }
