@@ -238,14 +238,15 @@ async function createHeatmap() {
         data: heatmapData
     });
     heatmap.setMap(map);
-    processRequests(map);
-}
-
-function processRequests(map){
-    var directionsService = new google.maps.DirectionsService();
     
     var originArray = ['Bankstown, NSW', 'Cronulla, NSW', 'Avalon Beach, NSW'];
     var destinationArray = ['Blacktown, NSW', 'Strathfield, NSW', 'Potts Point, NSW'];
+
+    processRequests(map);
+}
+
+function processRequests(map, originArray, destinationArray){
+    var directionsService = new google.maps.DirectionsService();
 
     for (var i = 0; i < destinationArray.length; i++) {
         var request = {
