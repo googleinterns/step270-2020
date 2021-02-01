@@ -243,6 +243,33 @@ async function createHeatmap() {
         data: heatmapData
     });
     heatmap.setMap(map);
+    processRequests(map);
+}
+
+function processRequests(map){
+    var directionsService = new google.maps.DirectionsService();
+    
+    var originArray = ['Bankstown, NSW', 'Cronulla, NSW', 'Avalon Beach, NSW'];
+    var destinationArray = ['Blacktown, NSW', 'Strathfield, NSW', 'Potts Point, NSW'];
+
+    for (var i = 0; i < destinationArray.length; i++) {
+        var request = {
+            origin: originArray[i],
+            destination: destinationArray[i],
+            travelMode: 'DRIVING'
+        };
+
+        var directionsRenderer = new google.maps.DirectionsRenderer();
+        directionsRenderer.setMap(map);
+        
+        directionsService.route(request, function(response, status) {
+            if (status === 'OK') {
+                directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer.setMap(map);
+                directionsRenderer.setDirections(response);
+            }
+        });
+    }
 }
 
 var slider = document.getElementById("timeRange");
