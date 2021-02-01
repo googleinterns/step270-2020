@@ -238,11 +238,11 @@ async function createHeatmap() {
         data: heatmapData
     });
     heatmap.setMap(map);
-    
+
     var originArray = ['Bankstown, NSW', 'Cronulla, NSW', 'Avalon Beach, NSW'];
     var destinationArray = ['Blacktown, NSW', 'Strathfield, NSW', 'Potts Point, NSW'];
 
-    processRequests(map);
+    processRequests(map, originArray, destinationArray);
 }
 
 function processRequests(map, originArray, destinationArray){
