@@ -12,13 +12,24 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-async function createHeatmap() {
-    // Create the script tag, set the appropriate attributes
-    var script = document.createElement('script');
-    script.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY + "&map_ids=8623f34b0014ed47&libraries=visualization";
-    script.defer = true;
-    document.head.appendChild(script);
+function main() {
+    initialiseMapsAPI();
+    createHeatmap();
+}
 
+
+// Initialise API scripts with local API key
+function initialiseMapsAPI() {
+    // Create the script tag, set the appropriate attributes
+    var maps = document.createElement('script');
+    maps.src = "https://maps.googleapis.com/maps/api/js?key=" + API_KEY + "&libraries=visualization,places&map_ids=8623f34b0014ed47&callback=initAutocomplete";
+    maps.defer = true;
+    document.head.appendChild(maps);
+}
+
+
+// HeatMap
+async function createHeatmap() {
     var response = await fetch('/data');
     const data = await response.json();
     const hotspots = data.data.monitor;
@@ -240,11 +251,42 @@ async function createHeatmap() {
     heatmap.setMap(map);
 }
 
+
+// Slider (updates current value)
 var slider = document.getElementById("timeRange");
 var output = document.getElementById("value");
 output.innerHTML = slider.value; // Display the default slider value
-
-// Update the current slider value (each time you drag the slider handle)
 slider.oninput = function() {
     output.innerHTML = this.value;
+}
+
+
+// Destinations
+var destinations = ["restaurant", "park", "shopping-centre", "bar", "arcade"];
+var currentDestination = null;
+function selectDestination() {
+    for (i = 0; i < destinations.length; i++) {
+        if (document.getElementById(destinations[i]).classList.contains("selected-destination")) {
+            document.getElementById(destinations[i]).classList.remove("selected-destination");
+        }
+    }
+    document.getElementById(event.srcElement.id).classList.add("selected-destination");
+    currentDestination = event.srcElement.id;
+}
+
+
+// Address Autocomplete
+function initAutocomplete() {
+    var input = document.getElementById('address');
+    var options = {
+        types: ['address'],
+        componantRestrictions: {'country': ['AU']}
+    };
+
+    autocomplete = new google.maps.places.Autocomplete(input, options);
+
+    // Add the autocomplete container to dropdown div so menu doesn't disappear
+    setTimeout(function() {
+        document.getElementById("addPerson").prepend(document.getElementsByClassName("pac-container")[0]);
+    }, 300);
 }
