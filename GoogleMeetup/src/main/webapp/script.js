@@ -320,7 +320,7 @@ function addPerson() {
     attendees.push(newAttendee);
 
     // Add marker to the map and recenter
-    getLatLng(newAttendee);
+    appendLatLang(newAttendee);
 
     // Reset the form inputs
     document.querySelector('#addPerson').reset();
@@ -336,11 +336,10 @@ function findMeetup() {
     maxTravelTime = document.getElementsByClassName('slider')[0].value;
 
     drawPaths();
-
-    alert("Not Finished Yet!");
 }
 
 
+// Checks if the necessary user input is complete
 function validateInput() {
     if (attendees.length == 0) {
         alert("You must add at least one person");
@@ -354,6 +353,7 @@ function validateInput() {
 }
 
 
+// Renders the directions paths from the starting points to the meetup destination
 function drawPaths(){
     var directionsService = new google.maps.DirectionsService();
 
@@ -369,9 +369,6 @@ function drawPaths(){
         
         directionsService.route(request, function(response, status) {
             if (status === 'OK') {
-                // This is for later when rendering route duration in infowindows
-                // console.log(response.routes[0].legs[0].duration);
-
                 directionsRenderer = new google.maps.DirectionsRenderer();
                 directionsRenderer.setMap(map);
                 directionsRenderer.setDirections(response);
@@ -380,7 +377,13 @@ function drawPaths(){
     }
 }
 
+
+// Returns the correct string for the directions API call
 function getTransitMode(transport) {
+    var transitModes = ["car", "public", "bike", "walk"];
+
+    console.assert(transitModes.includes(transport));
+
     if (transport == "car") {
         return "DRIVING";
     } else if (transport == "public") {
@@ -393,8 +396,9 @@ function getTransitMode(transport) {
 }
 
 
+// Converts the user inputted address into latLongs using the geocoder API
 var latLngs = [];
-function getLatLng(attendee) {
+function appendLatLang(attendee) {
     var address = attendee['address'];
     geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == 'OK') {
@@ -410,26 +414,21 @@ function getLatLng(attendee) {
 }
 
 
+// Recenters the map based on the current mapCenter
 function centerMap() {
     if (latLngs.length == 1) {
         map.setCenter(latLngs[0]);
         mapCenter = latLngs[0];
     } else {
-        var midpoint = {
-            "lat":latLngs[0].lat(), 
-            "lng": latLngs[0].lng()
-        };
+        center = averageLatLongs();
 
-        for (var i = 1; i < latLngs.length; i++) {
-            midpoint = calculateMidpoint(midpoint.lat, midpoint.lng, latLngs[i].lat(), latLngs[i].lng());
-        }
-
-        map.setCenter(midpoint);
-        mapCenter = midpoint;
+        map.setCenter(center);
+        mapCenter = center;
     }
 }
 
 
+// Adds a new attendee marker to the map
 function addAttendeeMarker() {
     var latLng = latLngs[latLngs.length - 1];
     var marker = new google.maps.Marker({
@@ -439,30 +438,19 @@ function addAttendeeMarker() {
 }
 
 
-// Algorithm for geographical midpoint on spherical surface
-function calculateMidpoint (lat1, lng1, lat2, lng2) {
-    lat1 = lat1 * 0.017453292519943295;
-    lng1 = lng1 * 0.017453292519943295;
-    lat2 = lat2 * 0.017453292519943295;
-    lng2 = lng2 * 0.017453292519943295;
-
-    dlng = lng2 - lng1;
-    Bx = Math.cos(lat2) * Math.cos(dlng);
-    By = Math.cos(lat2) * Math.sin(dlng);
-    lat3 = Math.atan2(
-        Math.sin(lat1) + Math.sin(lat2), 
-        Math.sqrt((Math.cos(lat1) + Bx) * (Math.cos(lat1) + Bx) + By * By)
-    );
-    lng3 = lng1 + Math.atan2(
-        By, 
-        (Math.cos(lat1) + Bx)
-    );
-    pi = 3.141592653589793;
-    lat = (lat3 * 180) / pi;
-    lng = (lng3 * 180) / pi;
-
-    return {
-        "lat": lat, 
-        "lng": lng
+// Takes the average of the latLongs to find the approximate center of mass
+function averageLatLongs() {
+    var midpoint = {
+        "lat": latLngs[0].lat(), 
+        "lng": latLngs[0].lng()
     };
+
+    for (i = 1; i < latLngs.length; i++) {
+        midpoint = {
+            "lat": (midpoint.lat + latLngs[i].lat()) / 2, 
+            "lng": (midpoint.lng + latLngs[i].lng()) / 2
+        };
+    }
+
+    return midpoint;
 }
