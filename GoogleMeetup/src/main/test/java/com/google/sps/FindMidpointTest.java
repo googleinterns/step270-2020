@@ -58,7 +58,6 @@ public final class FindMidpointTest {
       // Should return a place given there'll be one within 20km.
 
   }
-
 }
 
 
