@@ -441,16 +441,21 @@ function addAttendeeMarker() {
 // Takes the average of the latLongs to find the approximate center of mass
 function averageLatLongs() {
     var midpoint = {
-        "lat": latLngs[0].lat(), 
-        "lng": latLngs[0].lng()
+        "lat": 0, 
+        "lng": 0
     };
 
-    for (i = 1; i < latLngs.length; i++) {
+    for (i = 0; i < latLngs.length; i++) {
         midpoint = {
-            "lat": (midpoint.lat + latLngs[i].lat()) / 2, 
-            "lng": (midpoint.lng + latLngs[i].lng()) / 2
+            "lat": midpoint.lat + latLngs[i].lat(), 
+            "lng": midpoint.lng + latLngs[i].lng()
         };
     }
+
+    midpoint = {
+        "lat": midpoint.lat / latLngs.length, 
+        "lng": midpoint.lng / latLngs.length
+    };
 
     return midpoint;
 }
