@@ -12,6 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// The relevant meetup information
+var attendees = [];
+var destinationType = null;
+var maxTravelTime = 60;
+
+// Initialise map variables
+var geocoder;
+var map;
+var mapCenter;
+
+
 function main() {
     initialiseMapsAPI();
     createHeatmap();
@@ -37,8 +48,12 @@ async function createHeatmap() {
     var heatmapData = [];
     var markers = [];
 
-    const map = new google.maps.Map(document.getElementById('map'), {
-        center: new google.maps.LatLng(-33.8, 151.1),
+    geocoder = new google.maps.Geocoder();
+
+    mapCenter = new google.maps.LatLng(-33.8, 151.1);
+
+    map = new google.maps.Map(document.getElementById('map'), {
+        center: mapCenter,
         zoom: 10,
         styles: [
             {
@@ -249,21 +264,104 @@ async function createHeatmap() {
         data: heatmapData
     });
     heatmap.setMap(map);
-
-    var originArray = ['Bankstown, NSW', 'Cronulla, NSW', 'Avalon Beach, NSW'];
-    var midpoint = 'Strathfield, NSW';
-
-    processRequests(map, originArray, midpoint);
 }
 
-function processRequests(map, originArray, midpoint){
+
+// Slider (updates current value)
+var slider = document.getElementById("timeRange");
+var output = document.getElementById("value");
+output.innerHTML = slider.value; // Display the default slider value
+slider.oninput = function() {
+    output.innerHTML = this.value;
+}
+
+
+// Destinations
+var destinations = ["restaurant", "park", "shopping-centre", "bar", "arcade"];
+function selectDestination() {
+    for (i = 0; i < destinations.length; i++) {
+        if (document.getElementById(destinations[i]).classList.contains("selected-destination")) {
+            document.getElementById(destinations[i]).classList.remove("selected-destination");
+        }
+    }
+    document.getElementById(event.srcElement.id).classList.add("selected-destination");
+    destinationType = event.srcElement.id;
+}
+
+
+// Address Autocomplete
+function initAutocomplete() {
+    var input = document.getElementById('address');
+    var options = {
+        types: ['address'],
+        componantRestrictions: {'country': ['AU']}
+    };
+
+    autocomplete = new google.maps.places.Autocomplete(input, options);
+
+    // Add the autocomplete container to dropdown div so menu doesn't disappear
+    setTimeout(function() {
+        document.getElementById("addPersonContainer").prepend(document.getElementsByClassName("pac-container")[0]);
+    }, 300);
+}
+
+
+// Adding a new meetup attendee 
+function addPerson() {
+    // Create new attendee dict
+    var address = document.getElementById("address").value;
+    var transport = document.getElementById("transport").value;
+    var newAttendee = {
+        "address": address,
+        "transport": transport
+    };
+
+    // Add to attendees list 
+    attendees.push(newAttendee);
+
+    // Add marker to the map and recenter
+    appendLatLang(newAttendee);
+
+    // Reset the form inputs
+    document.querySelector('#addPerson').reset();
+}
+
+
+// Finding the meetup 
+function findMeetup() {
+    if (!validateInput()) {
+        return;
+    }
+
+    maxTravelTime = document.getElementsByClassName('slider')[0].value;
+
+    drawPaths();
+}
+
+
+// Checks if the necessary user input is complete
+function validateInput() {
+    if (attendees.length == 0) {
+        alert("You must add at least one person");
+        return false;
+    } if (destinationType == null) {
+        alert("You must select a destination type");
+        return false;
+    }
+    
+    return true;
+}
+
+
+// Renders the directions paths from the starting points to the meetup destination
+function drawPaths(){
     var directionsService = new google.maps.DirectionsService();
 
-    for (var i = 0; i < originArray.length; i++) {
+    for (var i = 0; i < attendees.length; i++) {
         var request = {
-            origin: originArray[i],
-            destination: midpoint,
-            travelMode: 'DRIVING'
+            origin: attendees[i].address,
+            destination: mapCenter,
+            travelMode: getTransitMode(attendees[i].transport)
         };
 
         var directionsRenderer = new google.maps.DirectionsRenderer();
@@ -280,41 +378,84 @@ function processRequests(map, originArray, midpoint){
 }
 
 
-// Slider (updates current value)
-var slider = document.getElementById("timeRange");
-var output = document.getElementById("value");
-output.innerHTML = slider.value; // Display the default slider value
-slider.oninput = function() {
-    output.innerHTML = this.value;
-}
+// Returns the correct string for the directions API call
+function getTransitMode(transport) {
+    var transitModes = ["car", "public", "bike", "walk"];
 
+    console.assert(transitModes.includes(transport));
 
-// Destinations
-var destinations = ["restaurant", "park", "shopping-centre", "bar", "arcade"];
-var currentDestination = null;
-function selectDestination() {
-    for (i = 0; i < destinations.length; i++) {
-        if (document.getElementById(destinations[i]).classList.contains("selected-destination")) {
-            document.getElementById(destinations[i]).classList.remove("selected-destination");
-        }
+    if (transport == "car") {
+        return "DRIVING";
+    } else if (transport == "public") {
+        return "TRANSIT";
+    } else if (transport == "bike") {
+        return "BICYCLING";
+    } else if (transport == "walk") {
+        return "WALKING";
     }
-    document.getElementById(event.srcElement.id).classList.add("selected-destination");
-    currentDestination = event.srcElement.id;
 }
 
 
-// Address Autocomplete
-function initAutocomplete() {
-    var input = document.getElementById('address');
-    var options = {
-        types: ['address'],
-        componantRestrictions: {'country': ['AU']}
+// Converts the user inputted address into latLongs using the geocoder API
+var latLngs = [];
+function appendLatLang(attendee) {
+    var address = attendee['address'];
+    geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == 'OK') {
+            var latLng = results[0].geometry.location;
+            latLngs[latLngs.length] = latLng;
+
+            addAttendeeMarker();
+            centerMap();
+        } else { // For debugging
+            console.log('Geocode was not successful for the following reason: ' + status);
+        }
+    });
+}
+
+
+// Recenters the map based on the current mapCenter
+function centerMap() {
+    if (latLngs.length == 1) {
+        map.setCenter(latLngs[0]);
+        mapCenter = latLngs[0];
+    } else {
+        center = averageLatLongs();
+
+        map.setCenter(center);
+        mapCenter = center;
+    }
+}
+
+
+// Adds a new attendee marker to the map
+function addAttendeeMarker() {
+    var latLng = latLngs[latLngs.length - 1];
+    var marker = new google.maps.Marker({
+        map: map,
+        position: latLng
+    });
+}
+
+
+// Takes the average of the latLongs to find the approximate center of mass
+function averageLatLongs() {
+    var midpoint = {
+        "lat": 0, 
+        "lng": 0
     };
 
-    autocomplete = new google.maps.places.Autocomplete(input, options);
+    for (i = 0; i < latLngs.length; i++) {
+        midpoint = {
+            "lat": midpoint.lat + latLngs[i].lat(), 
+            "lng": midpoint.lng + latLngs[i].lng()
+        };
+    }
 
-    // Add the autocomplete container to dropdown div so menu doesn't disappear
-    setTimeout(function() {
-        document.getElementById("addPerson").prepend(document.getElementsByClassName("pac-container")[0]);
-    }, 300);
+    midpoint = {
+        "lat": midpoint.lat / latLngs.length, 
+        "lng": midpoint.lng / latLngs.length
+    };
+
+    return midpoint;
 }
