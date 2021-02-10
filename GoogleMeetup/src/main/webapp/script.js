@@ -22,7 +22,19 @@ var geocoder;
 var map;
 var mapCenter;
 
+// Other necessary info
+var transportModes = {
+    "car": "DRIVING",
+    "public": "TRANSIT",
+    "bike": "BICYCLING",
+    "walk": "WALKING"
+}
 
+var destination = null;
+var destinationMarker;
+
+
+// Called on load of html
 function main() {
     initialiseMapsAPI();
     createHeatmap();
@@ -247,6 +259,7 @@ async function createHeatmap() {
             map,
             title: hotspots[i].Venue
         });
+
         markers.push(marker);
         marker.setVisible(false);
         markers[i].addListener("click", () => {
@@ -277,7 +290,7 @@ slider.oninput = function() {
 
 
 // Destinations
-var destinations = ["restaurant", "park", "shopping-centre", "bar", "arcade"];
+var destinations = ["restaurant", "park", "mall", "bar", "cafe"];
 function selectDestination() {
     for (i = 0; i < destinations.length; i++) {
         if (document.getElementById(destinations[i]).classList.contains("selected-destination")) {
@@ -335,7 +348,11 @@ function findMeetup() {
 
     maxTravelTime = document.getElementsByClassName('slider')[0].value;
 
-    drawPaths();
+    if (destination != null) {
+        removeDestinations();
+    }
+
+    nearbySearch();
 }
 
 
@@ -353,25 +370,27 @@ function validateInput() {
 }
 
 
+var paths = []
 // Renders the directions paths from the starting points to the meetup destination
-function drawPaths(){
+function drawPaths(destination){
     var directionsService = new google.maps.DirectionsService();
 
     for (var i = 0; i < attendees.length; i++) {
         var request = {
             origin: attendees[i].address,
-            destination: mapCenter,
-            travelMode: getTransitMode(attendees[i].transport)
+            destination: destination.geometry.location,
+            travelMode: getTransportMode(attendees[i].transport)
         };
-
-        var directionsRenderer = new google.maps.DirectionsRenderer();
-        directionsRenderer.setMap(map);
         
         directionsService.route(request, function(response, status) {
             if (status === 'OK') {
-                directionsRenderer = new google.maps.DirectionsRenderer();
+                directionsRenderer = new google.maps.DirectionsRenderer({
+                    suppressMarkers: true
+                });
                 directionsRenderer.setMap(map);
                 directionsRenderer.setDirections(response);
+
+                paths.push(directionsRenderer);
             }
         });
     }
@@ -379,20 +398,8 @@ function drawPaths(){
 
 
 // Returns the correct string for the directions API call
-function getTransitMode(transport) {
-    var transitModes = ["car", "public", "bike", "walk"];
-
-    console.assert(transitModes.includes(transport));
-
-    if (transport == "car") {
-        return "DRIVING";
-    } else if (transport == "public") {
-        return "TRANSIT";
-    } else if (transport == "bike") {
-        return "BICYCLING";
-    } else if (transport == "walk") {
-        return "WALKING";
-    }
+function getTransportMode(transport) {
+    return transportModes[transport];
 }
 
 
@@ -458,4 +465,54 @@ function averageLatLongs() {
     };
 
     return midpoint;
+}
+
+
+// Does a nearby search (10km) of midpoint for selected destination type
+function nearbySearch() {
+    var request = {
+        location: mapCenter,
+        radius: '2000',
+        keyword: [destinationType]
+    };
+
+    service = new google.maps.places.PlacesService(map);
+    service.nearbySearch(request, callback);
+}
+
+function callback(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+        destination = results[0];
+        createDestinationMarker(destination);
+        drawPaths(destination);
+    } else {
+        alert("Could not find a suitable meetup destination");
+    }
+}
+
+function createDestinationMarker(place) {
+    marker = new google.maps.Marker({
+        position: place.geometry.location,
+        map,
+        title: place.name
+    });
+
+    destinationMarker = marker;
+
+    const infowindow = new google.maps.InfoWindow({
+        content: "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "<br/>" + "Status: " + place.business_status,
+        maxWidth: 300,
+        position: place.geometry.location
+    });
+
+    google.maps.event.addListener(marker, "click", () => {
+        infowindow.open(map);
+    });
+}
+
+function removeDestinations() {
+    for (i = 0; i < paths.length; i++) {
+        paths[i].setMap(null);
+    }
+    destinationMarker.setMap(null);
 }
