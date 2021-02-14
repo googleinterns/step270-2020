@@ -26,6 +26,13 @@ var mapCenter;
 function main() {
     initialiseMapsAPI();
     createHeatmap();
+    // Slider (updates current value)
+    var slider = document.getElementById("timeRange");
+    var output = document.getElementById("value");
+    output.innerHTML = slider.value; // Display the default slider value
+    slider.oninput = function() {
+        output.innerHTML = this.value;
+    }
 }
 
 
@@ -267,13 +274,7 @@ async function createHeatmap() {
 }
 
 
-// Slider (updates current value)
-var slider = document.getElementById("timeRange");
-var output = document.getElementById("value");
-output.innerHTML = slider.value; // Display the default slider value
-slider.oninput = function() {
-    output.innerHTML = this.value;
-}
+
 
 
 // Destinations
@@ -324,6 +325,8 @@ function addPerson() {
 
     // Reset the form inputs
     document.querySelector('#addPerson').reset();
+
+    return attendees;
 }
 
 
@@ -403,7 +406,7 @@ function appendLatLang(attendee) {
     geocoder.geocode( { 'address': address}, function(results, status) {
         if (status == 'OK') {
             var latLng = results[0].geometry.location;
-            latLngs[latLngs.length] = latLng;
+            latLngs[latLngs.length] = {"lat": latLng.lat(), "lng": latLng.lng()};
 
             addAttendeeMarker();
             centerMap();
@@ -420,8 +423,7 @@ function centerMap() {
         map.setCenter(latLngs[0]);
         mapCenter = latLngs[0];
     } else {
-        center = averageLatLongs();
-
+        center = averageLatLongs(latLngs);
         map.setCenter(center);
         mapCenter = center;
     }
@@ -439,16 +441,16 @@ function addAttendeeMarker() {
 
 
 // Takes the average of the latLongs to find the approximate center of mass
-function averageLatLongs() {
+export function averageLatLongs(latLngs) {
     var midpoint = {
         "lat": 0, 
         "lng": 0
     };
 
-    for (i = 0; i < latLngs.length; i++) {
+    for (var i = 0; i < latLngs.length; i++) {
         midpoint = {
-            "lat": midpoint.lat + latLngs[i].lat(), 
-            "lng": midpoint.lng + latLngs[i].lng()
+            "lat": midpoint.lat + latLngs[i].lat, 
+            "lng": midpoint.lng + latLngs[i].lng
         };
     }
 
@@ -456,6 +458,5 @@ function averageLatLongs() {
         "lat": midpoint.lat / latLngs.length, 
         "lng": midpoint.lng / latLngs.length
     };
-
     return midpoint;
 }
