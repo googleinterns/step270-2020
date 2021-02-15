@@ -14,6 +14,7 @@
 
 // The relevant meetup information
 var attendees = [];
+var markers = [];
 var destinationType = null;
 var maxTravelTime = 60;
 
@@ -58,7 +59,6 @@ async function createHeatmap() {
     const hotspots = data.data.monitor;
 
     var heatmapData = [];
-    var markers = [];
 
     geocoder = new google.maps.Geocoder();
 
@@ -483,29 +483,40 @@ function nearbySearch() {
 function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
         destination = results[0];
-        createDestinationMarker(destination);
         drawPaths(destination);
+        var marker = null;
+        for (var i = 0; i < markers.length; i++) {
+            if (destination.name === markers[i].title) {
+                marker = markers[i];
+            }
+        }
+        createDestinationMarker(destination, marker);
     } else {
         alert("Could not find a suitable meetup destination");
     }
 }
 
-function createDestinationMarker(place) {
-    marker = new google.maps.Marker({
+function createDestinationMarker(place, marker) {
+    var destinationMarker = new google.maps.Marker({
         position: place.geometry.location,
         map,
         title: place.name
     });
 
-    destinationMarker = marker;
+    var message = "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "/5 <br/>" + "Status: " + place.business_status + "<b>" + place.opening_hours.open_now+ "</b>";
+    if(marker !== null) {
+        message = message + "<br/> <b> Please advise that this place has had a visitor test positive for COVID-19 within the past 14 days. </b>";
+    }
+
+    console.log(place);
 
     const infowindow = new google.maps.InfoWindow({
-        content: "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "<br/>" + "Status: " + place.business_status,
+        content: message,
         maxWidth: 300,
         position: place.geometry.location
     });
 
-    google.maps.event.addListener(marker, "click", () => {
+    google.maps.event.addListener(destinationMarker, "click", () => {
         infowindow.open(map);
     });
 }
