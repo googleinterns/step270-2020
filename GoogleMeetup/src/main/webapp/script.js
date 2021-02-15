@@ -17,6 +17,7 @@ var attendees = [];
 var markers = [];
 var destinationType = null;
 var maxTravelTime = 60;
+var suburbs = [];
 
 // Initialise map variables
 var geocoder;
@@ -260,6 +261,17 @@ async function createHeatmap() {
             title: hotspots[i].Venue
         });
 
+
+        var suburb = hotspots[i].Address;
+
+        suburb = suburb.replace(/,\sNSW.*$/, '');
+        suburb = suburb.replace(/^.*?,\s/, '');
+        
+
+        if (!suburbs.includes(suburb)) {
+            suburbs.push(suburb);
+        }
+
         markers.push(marker);
         marker.setVisible(false);
         markers[i].addListener("click", () => {
@@ -482,7 +494,15 @@ function nearbySearch() {
 
 function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-        destination = results[0];
+        for (var i = 0; i < results.length; i++) {
+            if(suburbs.includes(results[i].vicinity.replace(/^.*?,\s/, ''))){
+                continue;
+            } else {
+                destination = results[i];
+                break;
+            }
+        }
+        
         drawPaths(destination);
         var marker = null;
         for (var i = 0; i < markers.length; i++) {
@@ -503,12 +523,10 @@ function createDestinationMarker(place, marker) {
         title: place.name
     });
 
-    var message = "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "/5 <br/>" + "Status: " + place.business_status + "<b>" + place.opening_hours.open_now+ "</b>";
+    var message = "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "/5 <br/>" + "Status: " + place.business_status;
     if(marker !== null) {
         message = message + "<br/> <b> Please advise that this place has had a visitor test positive for COVID-19 within the past 14 days. </b>";
     }
-
-    console.log(place);
 
     const infowindow = new google.maps.InfoWindow({
         content: message,
