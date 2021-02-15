@@ -504,19 +504,13 @@ function callback(results, status) {
         }
         
         drawPaths(destination);
-        var marker = null;
-        for (var i = 0; i < markers.length; i++) {
-            if (destination.name === markers[i].title) {
-                marker = markers[i];
-            }
-        }
-        createDestinationMarker(destination, marker);
+        createDestinationMarker(destination);
     } else {
         alert("Could not find a suitable meetup destination");
     }
 }
 
-function createDestinationMarker(place, marker) {
+function createDestinationMarker(place) {
     var destinationMarker = new google.maps.Marker({
         position: place.geometry.location,
         map,
@@ -524,9 +518,6 @@ function createDestinationMarker(place, marker) {
     });
 
     var message = "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "/5 <br/>" + "Status: " + place.business_status;
-    if(marker !== null) {
-        message = message + "<br/> <b> Please advise that this place has had a visitor test positive for COVID-19 within the past 14 days. </b>";
-    }
 
     const infowindow = new google.maps.InfoWindow({
         content: message,
