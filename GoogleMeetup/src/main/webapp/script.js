@@ -484,7 +484,7 @@ function averageLatLongs() {
 function nearbySearch() {
     var request = {
         location: mapCenter,
-        radius: '2000',
+        radius: '10000',
         keyword: [destinationType]
     };
 
