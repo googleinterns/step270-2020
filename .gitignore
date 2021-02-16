@@ -1,4 +1,6 @@
 target/
+node_modules/
+GoogleMeetup/node_modules/
 meetup.js
 GoogleMeetup/.classpath
 GoogleMeetup/.project

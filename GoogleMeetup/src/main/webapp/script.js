@@ -14,8 +14,10 @@
 
 // The relevant meetup information
 var attendees = [];
+var markers = [];
 var destinationType = null;
 var maxTravelTime = 60;
+var suburbs = [];
 
 // Initialise map variables
 var geocoder;
@@ -58,7 +60,6 @@ async function createHeatmap() {
     const hotspots = data.data.monitor;
 
     var heatmapData = [];
-    var markers = [];
 
     geocoder = new google.maps.Geocoder();
 
@@ -259,6 +260,17 @@ async function createHeatmap() {
             map,
             title: hotspots[i].Venue
         });
+
+
+        var suburb = hotspots[i].Address;
+
+        suburb = suburb.replace(/,\sNSW.*$/, '');
+        suburb = suburb.replace(/^.*?,\s/, '');
+        
+
+        if (!suburbs.includes(suburb)) {
+            suburbs.push(suburb);
+        }
 
         markers.push(marker);
         marker.setVisible(false);
@@ -482,30 +494,38 @@ function nearbySearch() {
 
 function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-        destination = results[0];
-        createDestinationMarker(destination);
+        for (var i = 0; i < results.length; i++) {
+            if (suburbs.includes(results[i].vicinity.replace(/^.*?,\s/, ''))) {
+                continue;
+            } else {
+                destination = results[i];
+                break;
+            }
+        }
+        
         drawPaths(destination);
+        createDestinationMarker(destination);
     } else {
         alert("Could not find a suitable meetup destination");
     }
 }
 
 function createDestinationMarker(place) {
-    marker = new google.maps.Marker({
+    var destinationMarker = new google.maps.Marker({
         position: place.geometry.location,
         map,
         title: place.name
     });
 
-    destinationMarker = marker;
+    var message = "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "/5 <br/>" + "Status: " + place.business_status;
 
     const infowindow = new google.maps.InfoWindow({
-        content: "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "<br/>" + "Status: " + place.business_status,
+        content: message,
         maxWidth: 300,
         position: place.geometry.location
     });
 
-    google.maps.event.addListener(marker, "click", () => {
+    google.maps.event.addListener(destinationMarker, "click", () => {
         infowindow.open(map);
     });
 }
