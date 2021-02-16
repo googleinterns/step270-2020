@@ -484,7 +484,7 @@ function averageLatLongs() {
 function nearbySearch() {
     var request = {
         location: mapCenter,
-        radius: '10000',
+        radius: '2000',
         keyword: [destinationType]
     };
 
@@ -495,7 +495,7 @@ function nearbySearch() {
 function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
         for (var i = 0; i < results.length; i++) {
-            if(suburbs.includes(results[i].vicinity.replace(/^.*?,\s/, ''))){
+            if (suburbs.includes(results[i].vicinity.replace(/^.*?,\s/, ''))) {
                 continue;
             } else {
                 destination = results[i];
