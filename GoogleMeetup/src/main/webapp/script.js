@@ -258,7 +258,12 @@ async function createHeatmap() {
         marker = new google.maps.Marker({
             position: {lat: parseFloat(hotspots[i].Lat), lng: parseFloat(hotspots[i].Lon)},
             map,
-            title: hotspots[i].Venue
+            title: hotspots[i].Venue,
+            icon: {
+                url: "Images/iconfinder_01-Virus_5929134.svg", 
+                scaledSize: new google.maps.Size(40, 40), 
+                anchor: new google.maps.Point(20, 20),
+            }
         });
 
 
@@ -281,7 +286,7 @@ async function createHeatmap() {
 
     map.addListener("zoom_changed", () => {
         for (var i = 0; i < markers.length; i++) {
-            markers[i].setVisible(map.zoom >= 15);
+            markers[i].setVisible(map.zoom >= 12);
         }
     });
 
@@ -452,7 +457,11 @@ function addAttendeeMarker() {
     var latLng = latLngs[latLngs.length - 1];
     var marker = new google.maps.Marker({
         map: map,
-        position: latLng
+        position: latLng,
+        icon: {
+            url: "Images/iconfinder_map-marker_299087.svg", 
+            scaledSize: new google.maps.Size(40, 40), // scale size
+        }
     });
 }
 
@@ -514,7 +523,12 @@ function createDestinationMarker(place) {
     var destinationMarker = new google.maps.Marker({
         position: place.geometry.location,
         map,
-        title: place.name
+        title: place.name,
+        icon: {
+            url: "Images/iconfinder_FlagBlue_728937.svg", 
+            scaledSize: new google.maps.Size(50, 50), 
+            anchor: new google.maps.Point(0, 50),
+        }
     });
 
     var message = "<h3>" + place.name + "</h3>" + "Rated: " + place.rating + "/5 <br/>" + "Status: " + place.business_status;
