@@ -12,7 +12,7 @@ html, body {
 
 #navbar {
     height: 66px;
-    background-color: rgb(154, 221, 255);
+    background-color:  rgb(154, 215, 255);
     display: block;
     text-align: center;
     font-family: "Roboto", Helvetica, Arial, sans-serif;
@@ -24,8 +24,8 @@ html, body {
     display: block;
     font-size: 0;
     text-align: center;
-    color: #000000;
-    background-color:  rgb(154, 221, 255);
+    color: #272727;
+    background-color:  rgb(154, 215, 255);
     border: transparent;
     margin: 0; 
     padding: 0;
@@ -57,14 +57,14 @@ html, body {
 
 #navbar li:hover>span, #navbar li:hover>a {  
     color:#FFFFFF;
-    background-color:rgb(126, 166, 236);
+    background-color:rgb(105, 179, 240);
 }
 
 #navbar .dropdown {
     text-align: left;
     left: 0;
     font-family: inherit;
-    color:  #222222;
+    color:  #303030;
     background-color: #FFFFFF;
     border: none;
     position: absolute;
@@ -96,8 +96,8 @@ html, body {
 }
 
 #navbar .dropdown li:hover > span, #navbar .dropdown li:hover > a {
-    color: #000000;
-    background-color: #EEEEEE;
+    color: #2b2b2b;
+    background-color: rgba(216, 216, 216, 0.671);
     cursor: pointer;
 }
 
@@ -199,7 +199,7 @@ html, body {
   width: 25px;
   height: 25px;
   border-radius: 50%; 
-  background: rgb(255, 189, 136);
+  background: rgb(255, 178, 114);
   cursor: pointer;
 }
 
@@ -207,14 +207,14 @@ html, body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: rgb(255, 189, 136);
+  background: rgb(255, 178, 114);
   cursor: pointer;
 } 
 
 /* Map */
 #map-container {
     flex-grow: 1;
-    background-color: rgb(238, 250, 255);
+    background-color: rgb(250, 254, 255);
 
     display: flex;
     align-items: center;
@@ -247,4 +247,60 @@ form > #address {
 
 #findMeetupButton {
     cursor: pointer;
+}
+
+input[type=text], select {
+    padding: 5px;
+    border: 0;
+    box-shadow: 0 0 15px 4px rgba(26, 26, 26, 0.06);
+    border-radius: 10px;
+    font-family: sans-serif;
+    letter-spacing: 1px;
+
+    transition: .2s box-shadow;
+}
+
+input[type=text]:hover, select:hover {
+    box-shadow:0 0 4px rgba(0,0,0,0.5);
+}
+
+select {
+    font-weight: 400;
+}
+
+input[type=button] {
+    appearance: none;
+    -webkit-appearance:n one;
+
+    padding: 10px;
+    border: none;
+    background-color :#4f98f8;
+    color: #fff;
+    font-weight: 600;
+    letter-spacing: 1px;
+    border-radius: 7.5px;
+    /* box-shadow: 0 0 15px 4px rgba(161, 213, 248, 0.459); */
+    box-shadow: 0 0 15px 4px rgba(26, 26, 26, 0.06);
+
+    transition: .2s box-shadow;
+}
+
+input[type=button]:hover {
+    /* box-shadow: 0 0 15px 4px rgba(36, 137, 204, 0.733); */
+    box-shadow:0 0 4px rgba(0,0,0,0.5);
+    letter-spacing: 1.5px;
+}
+
+label {
+    font-family: sans-serif;
+    font-weight: 400;
+    font-size: 15px;
+    letter-spacing: 1.5px;
+}
+
+li > a {
+    font-family: sans-serif;
+    font-weight: 400;
+    letter-spacing: 0.5px;
+    font-size: 20px;
 }
